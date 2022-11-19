@@ -1,0 +1,34 @@
+PODS:
+  - flutter_desktop_sleep (0.0.1):
+    - FlutterMacOS
+  - flutter_local_notifications (0.0.1):
+    - FlutterMacOS
+  - FlutterMacOS (1.0.0)
+  - path_provider_macos (0.0.1):
+    - FlutterMacOS
+
+DEPENDENCIES:
+  - flutter_desktop_sleep (from `Flutter/ephemeral/.symlinks/plugins/flutter_desktop_sleep/macos`)
+  - flutter_local_notifications (from `Flutter/ephemeral/.symlinks/plugins/flutter_local_notifications/macos`)
+  - FlutterMacOS (from `Flutter/ephemeral`)
+  - path_provider_macos (from `Flutter/ephemeral/.symlinks/plugins/path_provider_macos/macos`)
+
+EXTERNAL SOURCES:
+  flutter_desktop_sleep:
+    :path: Flutter/ephemeral/.symlinks/plugins/flutter_desktop_sleep/macos
+  flutter_local_notifications:
+    :path: Flutter/ephemeral/.symlinks/plugins/flutter_local_notifications/macos
+  FlutterMacOS:
+    :path: Flutter/ephemeral
+  path_provider_macos:
+    :path: Flutter/ephemeral/.symlinks/plugins/path_provider_macos/macos
+
+SPEC CHECKSUMS:
+  flutter_desktop_sleep: d7e29bb5c2944a0db954674f53ad190b79a7d69d
+  flutter_local_notifications: 3805ca215b2fb7f397d78b66db91f6a747af52e4
+  FlutterMacOS: ae6af50a8ea7d6103d888583d46bd8328a7e9811
+  path_provider_macos: 3c0c3b4b0d4a76d2bf989a913c2de869c5641a19
+
+PODFILE CHECKSUM: ff14ad4792a1facae25c6824ae7adb8880d4d036
+
+COCOAPODS: 1.11.3
