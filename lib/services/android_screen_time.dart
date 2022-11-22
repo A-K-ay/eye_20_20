@@ -3,19 +3,13 @@ import 'dart:developer';
 import 'dart:ui';
 
 import 'package:eye_20_20/services/local_notification.dart';
-import 'package:eye_20_20/services/screen_time_Interface.dart';
+import 'package:flutter/foundation.dart';
+import './screen_time_Interface.dart';
 import 'package:screen_state/screen_state.dart';
 
-class AndroidScreenTime implements ScreenTimeInterface {
+class AndroidScreenTime extends ScreenTimeInterface {
   late Screen _screen;
-  late StreamSubscription _subscription;
-  late Stream _stream = Stream.periodic(Duration(seconds: 1));
-  @override
-  late Stopwatch stopwatch = Stopwatch();
   late LocalNotificationService localNotificationService;
-  late VoidCallback uiUpdateCallback;
-  @override
-  Duration screenOnTime = const Duration(minutes: 1);
   @override
   void init() {
     log("started listning");
@@ -25,22 +19,16 @@ class AndroidScreenTime implements ScreenTimeInterface {
     } on ScreenStateException catch (exception) {
       print(exception);
     }
-  }
-
-  @override
-  Future sendNotification() async {
-    await LocalNotificationService().showNotification(
-        title: "Please Close Your Eyes",
-        id: DateTime.now().second,
-        body: "Close Your Eyes!!");
+    startTimer();
   }
 
   @override
   void startTimer() {
     stopwatch.reset();
     stopwatch.start();
-    uiUpdateCallback();
-    _subscription = _stream.listen(((event) async {
+    pollingSubscription = pollingStream.listen(((event) async {
+      stopwatchListner.value = stopwatch.elapsed;
+
       if (stopwatch.elapsed >= screenOnTime) {
         await sendNotification();
         log("notification sent");
@@ -53,10 +41,10 @@ class AndroidScreenTime implements ScreenTimeInterface {
   void stopTimer() {
     stopwatch.reset();
     stopwatch.stop();
-    uiUpdateCallback();
   }
 
   void onData(ScreenStateEvent event) {
+    if(!isActive.value) return;
     log(event.name);
     if (event == ScreenStateEvent.SCREEN_OFF) {
       stopTimer();
@@ -64,12 +52,6 @@ class AndroidScreenTime implements ScreenTimeInterface {
         event == ScreenStateEvent.SCREEN_UNLOCKED) {
       startTimer();
     }
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    _subscription.cancel();
   }
 
   @override
@@ -86,8 +68,14 @@ class AndroidScreenTime implements ScreenTimeInterface {
   }
 
   @override
-  void setRefreshUiCallback(VoidCallback uiCallback) {
-    // TODO: implement refreshUiCallback
-    uiUpdateCallback = uiCallback;
+  void pauseStreams() {
+    // TODO: implement pauseStreams
+    pollingSubscription.pause();
+  }
+  
+  @override
+  void resumeStreams() {
+    // TODO: implement resumeStreams
+    pollingSubscription.resume();
   }
 }

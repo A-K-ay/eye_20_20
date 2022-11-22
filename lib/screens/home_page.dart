@@ -1,6 +1,7 @@
 import 'package:eye_20_20/services/screen_time_Interface.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
 import '../utils/common_utils.dart';
 
@@ -18,7 +19,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     _screenTime = CommonUtils.getScreenTime();
     _screenTime.init();
-    _screenTime.setRefreshUiCallback(updateUI);
     super.initState();
   }
 
@@ -57,16 +57,28 @@ class _HomePageState extends State<HomePage> {
             //     icon: Icon(_screenTime.isRunning
             //         ? Icons.pause
             //         : Icons.remove_red_eye_sharp)),
-            ElevatedContainer(child: 
-            RichText(text: TextSpan(children: [
-              TextSpan(text:"Screen on Time: ${_screenTime.screenOnTime.inMinutes} \n",style: TextStyle(color: Colors.black)),
-              TextSpan(text:"Timer: ${_screenTime.stopwatch.elapsed.inSeconds}",style: TextStyle(color: Colors.black)),
-            ]))),
-            Switch(
-                value: _screenTime.isRunning,
+            AnimatedBuilder(animation: _screenTime.stopwatchListner, builder: ((context, child) {
+            //   return   ElevatedContainer(child: 
+            // RichText(text: TextSpan(children: [
+            //   TextSpan(text:"Screen on Time: ${_screenTime.screenOnTime.inMinutes} \n",style: TextStyle(color: Colors.black)),
+            //   TextSpan(text:"Timer: ${_screenTime.stopwatchListner.value.inSeconds}",style: TextStyle(color: Colors.black)),
+            // ])));
+            return CircularPercentIndicator(
+                  radius: _screenTime.screenOnTime.inSeconds.toDouble(),
+                  lineWidth: 5.0,
+                  percent: _screenTime.stopwatchListner.value.inSeconds/_screenTime.screenOnTime.inSeconds,
+                  center: Text("${_screenTime.stopwatchListner.value.inSeconds}",style: TextStyle(color: Colors.black)),
+                  progressColor: Colors.green,
+                );
+
+            })),
+
+            AnimatedBuilder(animation: _screenTime.isActive, builder: ((context, child) =>  Switch(
+                value: _screenTime.isActive.value,
                 onChanged: (val) {
                   _screenTime.toggleTimer();
-                }),
+                })))
+          
           ],
         ),
       ),

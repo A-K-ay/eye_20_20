@@ -3,19 +3,15 @@ import 'dart:developer';
 import 'dart:ui';
 
 import 'package:eye_20_20/services/local_notification.dart';
-import 'package:eye_20_20/services/screen_time_Interface.dart';
+import './screen_time_Interface.dart';
 import 'package:is_lock_screen/is_lock_screen.dart';
 import 'package:screen_state/screen_state.dart';
 
-class IosScreenTime implements ScreenTimeInterface {
+class IosScreenTime extends ScreenTimeInterface {
   late StreamSubscription _subscription;
   late Stream _stream = Stream.periodic(Duration(seconds: 1));
-  @override
-  late Stopwatch stopwatch = Stopwatch();
   late LocalNotificationService localNotificationService;
   late VoidCallback uiUpdateCallback;
-  @override
-  Duration screenOnTime = Duration(minutes: 1);
   bool isLocked = true;
   @override
   void init() {
@@ -96,5 +92,15 @@ class IosScreenTime implements ScreenTimeInterface {
   void setRefreshUiCallback(VoidCallback uiCallback) {
     // TODO: implement refreshUiCallback
     uiUpdateCallback = uiCallback;
+  }
+  
+  @override
+  void pauseStreams() {
+    // TODO: implement pauseStreams
+  }
+  
+  @override
+  void resumeStreams() {
+    // TODO: implement resumeStreams
   }
 }

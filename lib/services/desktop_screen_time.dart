@@ -3,13 +3,12 @@ import 'dart:developer';
 import 'dart:ui';
 
 import 'package:eye_20_20/services/local_notification.dart';
-import 'package:eye_20_20/services/screen_time_Interface.dart';
+import './screen_time_Interface.dart';
 import 'package:flutter_desktop_sleep/flutter_desktop_sleep.dart';
 import 'package:screen_state/screen_state.dart';
 
-class DesktopScreenTime implements ScreenTimeInterface {
+class DesktopScreenTime extends ScreenTimeInterface {
   @override
-  late Stopwatch stopwatch = Stopwatch();
   late StreamSubscription _subscription;
   late LocalNotificationService localNotificationService;
   FlutterDesktopSleep flutterDesktopSleep = FlutterDesktopSleep();
@@ -91,5 +90,15 @@ class DesktopScreenTime implements ScreenTimeInterface {
   void setRefreshUiCallback(VoidCallback uiCallback) {
     // TODO: implement refreshUiCallback
     uiUpdateCallback = uiCallback;
+  }
+  
+  @override
+  void pauseStreams() {
+    // TODO: implement pauseStreams
+  }
+  
+  @override
+  void resumeStreams() {
+    // TODO: implement resumeStreams
   }
 }
