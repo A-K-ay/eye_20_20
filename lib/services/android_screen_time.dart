@@ -9,13 +9,13 @@ import 'package:screen_state/screen_state.dart';
 
 class AndroidScreenTime extends ScreenTimeInterface {
   late Screen _screen;
-  late LocalNotificationService localNotificationService;
+  late StreamSubscription ScreenStateSubcription;
   @override
   void init() {
     log("started listning");
     _screen = Screen();
     try {
-      _screen.screenStateStream!.listen(onData);
+      ScreenStateSubcription = _screen.screenStateStream!.listen(onData);
     } on ScreenStateException catch (exception) {
       print(exception);
     }
@@ -24,8 +24,7 @@ class AndroidScreenTime extends ScreenTimeInterface {
 
   @override
   void startTimer() {
-    stopwatch.reset();
-    stopwatch.start();
+    startStopwatch();
     pollingSubscription = pollingStream.listen(((event) async {
       stopwatchListner.value = stopwatch.elapsed;
 
@@ -39,12 +38,12 @@ class AndroidScreenTime extends ScreenTimeInterface {
 
   @override
   void stopTimer() {
-    stopwatch.reset();
-    stopwatch.stop();
+    stopStopwatch();
+    stopwatchListner.value = stopwatch.elapsed;
   }
 
   void onData(ScreenStateEvent event) {
-    if(!isActive.value) return;
+    if (!isActive.value) return;
     log(event.name);
     if (event == ScreenStateEvent.SCREEN_OFF) {
       stopTimer();
@@ -60,22 +59,28 @@ class AndroidScreenTime extends ScreenTimeInterface {
 
   @override
   void toggleTimer() {
-    if (isRunning) {
-      stopTimer();
+    if (isActive.value) {
+      isActive.value = false;
+      pauseStreams();
     } else {
-      startTimer();
+      isActive.value = true;
+      resumeStreams();
     }
   }
 
   @override
   void pauseStreams() {
     // TODO: implement pauseStreams
+    stopStopwatch();
     pollingSubscription.pause();
+    ScreenStateSubcription.pause();
   }
-  
+
   @override
   void resumeStreams() {
     // TODO: implement resumeStreams
+    startStopwatch();
     pollingSubscription.resume();
+    ScreenStateSubcription.resume();
   }
 }

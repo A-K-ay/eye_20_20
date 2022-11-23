@@ -1,4 +1,3 @@
-
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
@@ -8,7 +7,7 @@ import 'local_notification.dart';
 
 abstract class ScreenTimeInterface {
   Stopwatch stopwatch = Stopwatch();
-  late ValueNotifier<Duration> stopwatchListner= ValueNotifier(Duration.zero);
+  late ValueNotifier<Duration> stopwatchListner = ValueNotifier(Duration.zero);
   var screenOnTime = Duration(seconds: 60);
   Stream pollingStream = Stream.periodic(Duration(seconds: 1));
   late StreamSubscription pollingSubscription;
@@ -26,10 +25,12 @@ abstract class ScreenTimeInterface {
   void stopStopwatch() {
     stopwatch.reset();
     stopwatch.stop();
+    stopwatchListner.value = stopwatch.elapsed;
   }
 
   void startStopwatch() {
     stopwatch.start();
+    stopwatchListner.value = stopwatch.elapsed;
   }
 
   bool get isStopwatchRunning => stopwatch.isRunning;
