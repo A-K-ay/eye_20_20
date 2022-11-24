@@ -37,6 +37,7 @@ class DesktopScreenTime extends ScreenTimeInterface {
   void stopTimer() {
     stopStopwatch();
     stopwatchListner.value = stopwatch.elapsed;
+    pauseStreams();
   }
 
   void onData(String s) {

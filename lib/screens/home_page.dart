@@ -30,34 +30,41 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 233, 255, 238),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          //  mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 36,
-            ),
-            Text(
-              "Take Care of Your Eyes",
-              style:
-                  GoogleFonts.aladin(fontSize: 22, fontWeight: FontWeight.w500),
-            ),
-            SizedBox(
-              height: 8,
-            ),
-            AnimatedBuilder(
-                animation: _screenTime.stopwatchListner,
-                builder: ((context, child) {
-                  return Center(
-                    child: ElevatedContainer(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            //  mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 30,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Text(
+                    "Take Care of Your Eyes",
+                    style: GoogleFonts.oswald(
+                        fontSize: 32, fontWeight: FontWeight.w500),
+                  ),
+                  ElevatedContainer(child: Icon(Icons.menu))
+                ],
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              AnimatedBuilder(
+                  animation: _screenTime.stopwatchListner,
+                  builder: ((context, child) {
+                    return Center(
                       child: CircularPercentIndicator(
                         // radius: _screenTime.screenOnTime.inSeconds.toDouble(),
-                        radius: 100,
-                        lineWidth: 20.0,
+                        radius: 160,
+                        lineWidth: 30.0,
                         rotateLinearGradient: true,
+                        backgroundColor: Color.fromARGB(255, 216, 238, 217),
                         percent: _screenTime.stopwatchListner.value.inSeconds /
                             _screenTime.screenOnTime.inSeconds,
                         circularStrokeCap: CircularStrokeCap.round,
@@ -66,39 +73,46 @@ class _HomePageState extends State<HomePage> {
                             text: TextSpan(children: [
                               TextSpan(
                                   text:
-                                      "${_screenTime.stopwatchListner.value.inSeconds}",
+                                      "${_screenTime.stopwatchListner.value.inMinutes.remainder(60)}:${(_screenTime.stopwatchListner.value.inSeconds.remainder(60))}",
                                   style: TextStyle(
                                       color: Colors.black,
-                                      fontWeight: FontWeight.w500)),
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 24)),
                               TextSpan(
-                                  text: "\nSeconds",
+                                  text: "\nMinutes ",
+                                  style: TextStyle(color: Colors.black)),
+                              TextSpan(
+                                  text: ": Seconds",
                                   style: TextStyle(color: Colors.black))
                             ])),
                         progressColor: Colors.green,
                       ),
-                    ),
-                  );
-                })),
-            AnimatedBuilder(
-              animation: _screenTime.isActive,
-              builder: ((context, child) => ElevatedContainer(
-                    child: ListTile(
-                      leading: Text("Timer"),
-                      trailing: CupertinoSwitch(
-                          value: _screenTime.isActive.value,
-                          onChanged: (val) {
-                            _screenTime.toggleTimer();
-                          }),
-                    ),
-                  )),
-            ),
-            Divider(),
-            SizedBox(
-              height: 8,
-            ),
-            Text(
-                "If you find yourself gazing at screens all day, your eye doctor may have mentioned this rule to you. Basically, every 20 minutes spent using a screen, you should try to look away at something that is 20 feet away from you for a total of 20 seconds."),
-          ],
+                    );
+                  })),
+              SizedBox(
+                height: 16,
+              ),
+              AnimatedBuilder(
+                animation: _screenTime.isActive,
+                builder: ((context, child) => ElevatedContainer(
+                      child: ListTile(
+                        leading: Text("Timer"),
+                        trailing: CupertinoSwitch(
+                            value: _screenTime.isActive.value,
+                            onChanged: (val) {
+                              _screenTime.toggleTimer();
+                            }),
+                      ),
+                    )),
+              ),
+              Divider(),
+              SizedBox(
+                height: 8,
+              ),
+              Text(
+                  "If you find yourself gazing at screens all day, your eye doctor may have mentioned this rule to you. Basically, every 20 minutes spent using a screen, you should try to look away at something that is 20 feet away from you for a total of 20 seconds."),
+            ],
+          ),
         ),
       ),
     );
@@ -106,11 +120,12 @@ class _HomePageState extends State<HomePage> {
 }
 
 class ElevatedContainer extends StatelessWidget {
-  Widget child;
-  double? height;
-  double? width;
+  final Widget child;
+  final double? height;
+  final double? width;
 
-  ElevatedContainer({Key? key, required this.child, this.height, this.width})
+  const ElevatedContainer(
+      {Key? key, required this.child, this.height, this.width})
       : super(key: key);
 
   @override

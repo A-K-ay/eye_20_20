@@ -40,6 +40,7 @@ class AndroidScreenTime extends ScreenTimeInterface {
   void stopTimer() {
     stopStopwatch();
     stopwatchListner.value = stopwatch.elapsed;
+    pauseStreams();
   }
 
   void onData(ScreenStateEvent event) {
