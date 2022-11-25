@@ -1,10 +1,11 @@
+import 'package:eye_20_20/screens/home_page/homePageDrawer.dart';
 import 'package:eye_20_20/services/screen_time_Interface.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
-import '../utils/common_utils.dart';
+import '../../utils/common_utils.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,6 +16,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late ScreenTimeInterface _screenTime;
+  GlobalKey<ScaffoldState> _globalKey = GlobalKey();
 
   @override
   void initState() {
@@ -30,26 +32,34 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      key: _globalKey,
+      drawer: HomePageDrawer(
+        screenTime: _screenTime,
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-            //  mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                height: 30,
+                height: 16,
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     "Take Care of Your Eyes",
                     style: GoogleFonts.oswald(
-                        fontSize: 32, fontWeight: FontWeight.w500),
+                        fontSize: 28, fontWeight: FontWeight.w500),
                   ),
-                  ElevatedContainer(child: Icon(Icons.menu))
+                  ElevatedContainer(
+                      padding: 0,
+                      child: IconButton(
+                          icon: Icon(Icons.menu),
+                          onPressed: () {
+                            _globalKey.currentState?.openDrawer();
+                          })),
                 ],
               ),
               SizedBox(
@@ -64,7 +74,8 @@ class _HomePageState extends State<HomePage> {
                         radius: 160,
                         lineWidth: 30.0,
                         rotateLinearGradient: true,
-                        backgroundColor: Color.fromARGB(255, 216, 238, 217),
+                        backgroundColor: Theme.of(context).bottomAppBarColor,
+                        progressColor: Theme.of(context).primaryColor,
                         percent: _screenTime.stopwatchListner.value.inSeconds /
                             _screenTime.screenOnTime.inSeconds,
                         circularStrokeCap: CircularStrokeCap.round,
@@ -75,17 +86,22 @@ class _HomePageState extends State<HomePage> {
                                   text:
                                       "${_screenTime.stopwatchListner.value.inMinutes.remainder(60)}:${(_screenTime.stopwatchListner.value.inSeconds.remainder(60))}",
                                   style: TextStyle(
-                                      color: Colors.black,
                                       fontWeight: FontWeight.w500,
+                                      color: Theme.of(context).primaryColor,
                                       fontSize: 24)),
                               TextSpan(
-                                  text: "\nMinutes ",
-                                  style: TextStyle(color: Colors.black)),
+                                text: "\nMinutes ",
+                                style: TextStyle(
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                              ),
                               TextSpan(
-                                  text: ": Seconds",
-                                  style: TextStyle(color: Colors.black))
+                                text: ": Seconds",
+                                style: TextStyle(
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                              )
                             ])),
-                        progressColor: Colors.green,
                       ),
                     );
                   })),
@@ -96,9 +112,18 @@ class _HomePageState extends State<HomePage> {
                 animation: _screenTime.isActive,
                 builder: ((context, child) => ElevatedContainer(
                       child: ListTile(
-                        leading: Text("Timer"),
+                        leading: Text(
+                          "Timer",
+                          style: TextStyle(fontSize: 20),
+                        ),
                         trailing: CupertinoSwitch(
                             value: _screenTime.isActive.value,
+                            activeColor: Theme.of(context)
+                                .buttonTheme
+                                .colorScheme!
+                                .background,
+                            trackColor: Theme.of(context).disabledColor,
+                            thumbColor: Theme.of(context).primaryColor,
                             onChanged: (val) {
                               _screenTime.toggleTimer();
                             }),
@@ -123,29 +148,28 @@ class ElevatedContainer extends StatelessWidget {
   final Widget child;
   final double? height;
   final double? width;
+  final double padding;
 
   const ElevatedContainer(
-      {Key? key, required this.child, this.height, this.width})
+      {Key? key,
+      required this.child,
+      this.height,
+      this.width,
+      this.padding = 16.0})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: EdgeInsets.symmetric(vertical: 0),
       child: Container(
         height: height,
         width: width,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.white,
-            boxShadow: [
-              new BoxShadow(
-                offset: Offset(1, 1),
-                color: Colors.black12,
-                blurRadius: 5.0,
-              ),
-            ]),
-        child: Padding(padding: const EdgeInsets.all(16.0), child: child),
+          borderRadius: BorderRadius.circular(10),
+          color: Theme.of(context).highlightColor,
+        ),
+        child: Padding(padding: EdgeInsets.all(padding), child: child),
       ),
     );
   }
