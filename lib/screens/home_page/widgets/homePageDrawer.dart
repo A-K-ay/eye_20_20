@@ -1,7 +1,8 @@
+import 'package:eye_20_20/screens/home_page/widgets/add_daily_duration.dart';
 import 'package:eye_20_20/services/screen_time_Interface.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+
+import 'change_screen_on_time.dart';
 
 class HomePageDrawer extends StatelessWidget {
   ScreenTimeInterface screenTime;
@@ -22,17 +23,10 @@ class HomePageDrawer extends StatelessWidget {
               SizedBox(
                 height: 16,
               ),
-              ListTile(
-                leading: Icon(Icons.timelapse),
-                title: Text("Screen On Time"),
-                isThreeLine: true,
-                trailing:
-                    Text(screenTime.screenOnTime.toString().substring(0, 4)),
-                subtitle: Text(
-                  "Screen on time indicates the time at which the notification is sent.",
-                  style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
-                ),
+              ChangeScreenOnTime(
+                screenTimeInterface: screenTime,
               ),
+              AddDailyDuration(screenTimeInterface: screenTime),
             ],
           ),
         ),

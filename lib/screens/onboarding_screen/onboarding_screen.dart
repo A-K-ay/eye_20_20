@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+
+import '../home_page/home_page.dart';
 
 class Onboarding extends StatefulWidget {
   const Onboarding({super.key});
@@ -54,61 +57,15 @@ class _OnboardingState extends State<Onboarding> {
                     );
                   }),
             ),
-            AnimatedBuilder(
-              animation: _pageController,
-              builder: (context, child) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 32),
-                  child: Flex(
-                    direction: Axis.horizontal,
-                    children: [
-                      Expanded(
-                        flex: _pageController.page!.floor() == 0 ? 2 : 1,
-                        child: Container(
-                          height: 10,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: _pageController.page!.floor() == 0
-                                ? Colors.grey
-                                : Colors.grey[200],
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 12,
-                      ),
-                      Expanded(
-                        flex: _pageController.page!.floor() == 1 ? 2 : 1,
-                        child: Container(
-                          height: 10,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: _pageController.page!.floor() == 1
-                                ? Colors.grey
-                                : Colors.grey[200],
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 12,
-                      ),
-                      Expanded(
-                        flex: _pageController.page!.floor() == 2 ? 2 : 1,
-                        child: Container(
-                          height: 10,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: _pageController.page!.floor() == 2
-                                ? Colors.grey
-                                : Colors.grey[200],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
+            SmoothPageIndicator(
+                controller: _pageController, // PageController
+                count: 3,
+                effect: ExpandingDotsEffect(), // your preferred effect
+                onDotClicked: (index) {
+                  _pageController.animateToPage(index,
+                      duration: Duration(milliseconds: 400),
+                      curve: Curves.easeOut);
+                }),
             SizedBox(
               height: 32,
             ),
@@ -133,15 +90,30 @@ class BottomBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        TextButton(onPressed: () {}, child: Text("Skip")),
-        ElevatedButton.icon(
+        TextButton(
             onPressed: () {
-              _pageController.nextPage(
-                  duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+              Navigator.pushReplacement(
+                  context, MaterialPageRoute(builder: (_) => HomePage()));
             },
-            icon: Icon(Icons.arrow_right_rounded),
-            label: Text("data")),
+            child: Text("Skip")),
+        AnimatedBuilder(
+          animation: _pageController,
+          builder: (context, child) => ElevatedButton(
+            onPressed: () {
+              if (_pageController.page!.ceil() == 2) {
+                Navigator.pushReplacement(
+                    context, MaterialPageRoute(builder: (_) => HomePage()));
+              } else {
+                _pageController.nextPage(
+                    duration: Duration(milliseconds: 400),
+                    curve: Curves.easeOut);
+              }
+            },
+            child: Icon(Icons.arrow_right_alt, size: 50),
+          ),
+        ),
       ],
     );
   }

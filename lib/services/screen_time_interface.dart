@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:time_range_picker/time_range_picker.dart';
 
 import 'local_notification.dart';
 
@@ -13,6 +14,7 @@ abstract class ScreenTimeInterface {
   late StreamSubscription pollingSubscription;
   late LocalNotificationService localNotificationService;
   ValueNotifier<bool> isActive = ValueNotifier(true);
+  TimeRange? scheduleRange;
 
   Future sendNotification() async {
     await LocalNotificationService().showNotification(

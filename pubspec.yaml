@@ -25,6 +25,8 @@ dependencies:
   percent_indicator: ^4.2.2
   flex_color_scheme: ^6.1.1
   flutter_svg: ^1.1.6
+  smooth_page_indicator: ^1.0.0+2
+  time_range_picker: ^2.2.0
 
 dev_dependencies:
   flutter_test:
