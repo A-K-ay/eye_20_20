@@ -11,7 +11,9 @@ class AndroidScreenTime extends ScreenTimeInterface {
   late Screen _screen;
   late StreamSubscription ScreenStateSubcription;
   @override
-  void init() {
+  Future init() async {
+    await localNotificationService.intialize();
+
     log("started listning");
     _screen = Screen();
     try {

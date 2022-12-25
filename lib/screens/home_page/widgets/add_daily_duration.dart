@@ -2,15 +2,20 @@ import 'package:eye_20_20/services/screen_time_Interface.dart';
 import 'package:flutter/material.dart';
 import 'package:time_range_picker/time_range_picker.dart';
 
-class AddDailyDuration extends StatelessWidget {
+class AddDailyDuration extends StatefulWidget {
   final ScreenTimeInterface screenTimeInterface;
-  const AddDailyDuration({required this.screenTimeInterface});
+  const AddDailyDuration({super.key, required this.screenTimeInterface});
 
+  @override
+  State<AddDailyDuration> createState() => _AddDailyDurationState();
+}
+
+class _AddDailyDurationState extends State<AddDailyDuration> {
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
       leading: Icon(
-        Icons.timelapse,
+        Icons.calendar_month_rounded,
       ),
       title: Text(
         "Daily Schedule",
@@ -19,11 +24,11 @@ class AddDailyDuration extends StatelessWidget {
       childrenPadding: EdgeInsets.all(16),
       children: [
         Text(
-            screenTimeInterface.scheduleRange == null
+            widget.screenTimeInterface.scheduleRange == null
                 ? "Please Select a Time Range"
-                : "7:30 to 8:30",
+                : "${widget.screenTimeInterface.scheduleRange!.startTime.format(context)} : ${widget.screenTimeInterface.scheduleRange!.endTime.format(context)}",
             style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic)),
-        Text("You can set a schedule for it to run automatically.",
+        Text("You can set a schedule for the timer to run automatically.",
             style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic)),
         SizedBox(
           height: 8,
@@ -33,8 +38,10 @@ class AddDailyDuration extends StatelessWidget {
               TimeRange result = await showTimeRangePicker(
                 context: context,
               );
+              widget.screenTimeInterface.scheduleRange = result;
+              setState(() {});
             },
-            child: Text("Save"))
+            child: Text("Pick Time Range"))
       ],
     );
   }

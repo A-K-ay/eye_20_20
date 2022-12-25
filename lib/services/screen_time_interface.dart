@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -12,16 +13,18 @@ abstract class ScreenTimeInterface {
   var screenOnTime = Duration(seconds: 120);
   Stream pollingStream = Stream.periodic(Duration(seconds: 1));
   late StreamSubscription pollingSubscription;
-  late LocalNotificationService localNotificationService;
+  late LocalNotificationService localNotificationService =
+      LocalNotificationService();
   ValueNotifier<bool> isActive = ValueNotifier(true);
   TimeRange? scheduleRange;
 
   Future sendNotification() async {
-    await LocalNotificationService().showNotification(
+    stopwatch.reset();
+    await localNotificationService.showNotification(
         title: "Please Close Your Eyes",
         id: DateTime.now().second,
         body: "Close Your Eyes!!");
-    stopwatch.reset();
+    log("Notification Sent");
   }
 
   void stopStopwatch() {
@@ -49,7 +52,7 @@ abstract class ScreenTimeInterface {
   }
 
   void resumeStreams();
-  void init();
+  Future init();
   void startTimer();
   void stopTimer();
   void pauseStreams();

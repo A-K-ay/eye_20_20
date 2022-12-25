@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:eye_20_20/screens/home_page/home_page.dart';
 import 'package:eye_20_20/screens/onboarding_screen/onboarding_screen.dart';
+import 'package:eye_20_20/screens/splash_screen/splash_screen.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 
 import 'package:flutter/material.dart';
@@ -50,7 +51,7 @@ class MyApp extends StatelessWidget {
       ),
       // Use dark or light theme based on system setting.
       themeMode: ThemeMode.light,
-      home: const Onboarding(),
+      home: const SplashScreen(),
     );
   }
 }

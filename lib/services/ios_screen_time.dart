@@ -10,8 +10,9 @@ import 'package:screen_state/screen_state.dart';
 class IosScreenTime extends ScreenTimeInterface {
   bool isLocked = true;
   @override
-  void init() {
+  Future init() async {
     log("started listning");
+    await localNotificationService.intialize();
     startTimer();
   }
 
@@ -24,8 +25,6 @@ class IosScreenTime extends ScreenTimeInterface {
       stopwatchListner.value = stopwatch.elapsed;
       if (stopwatch.elapsed >= screenOnTime) {
         await sendNotification();
-        log("notification sent");
-        stopwatch.reset();
       }
     }));
   }

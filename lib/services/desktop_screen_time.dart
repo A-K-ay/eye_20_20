@@ -11,8 +11,10 @@ class DesktopScreenTime extends ScreenTimeInterface {
   FlutterDesktopSleep flutterDesktopSleep = FlutterDesktopSleep();
 
   @override
-  void init() {
+  Future init() async {
     log("started listning");
+    await localNotificationService.intialize();
+
     flutterDesktopSleep.setWindowSleepHandler((String? s) async {
       log('Desktop Sleep State: $s');
       s != null ? onData(s) : null;

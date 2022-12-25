@@ -27,6 +27,7 @@ dependencies:
   flutter_svg: ^1.1.6
   smooth_page_indicator: ^1.0.0+2
   time_range_picker: ^2.2.0
+  shared_preferences: ^2.0.15
 
 dev_dependencies:
   flutter_test:
