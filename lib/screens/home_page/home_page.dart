@@ -126,8 +126,8 @@ class _HomePageState extends State<HomePage> {
                                   .background,
                               trackColor: Theme.of(context).disabledColor,
                               thumbColor: Theme.of(context).primaryColor,
-                              onChanged: (val) {
-                                _screenTime.toggleTimer();
+                              onChanged: (val) async {
+                                await _screenTime.toggleTimer();
                               }),
                         ),
                       )),

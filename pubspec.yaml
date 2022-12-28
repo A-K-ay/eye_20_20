@@ -28,6 +28,7 @@ dependencies:
   smooth_page_indicator: ^1.0.0+2
   time_range_picker: ^2.2.0
   shared_preferences: ^2.0.15
+  cron: ^0.5.1
 
 dev_dependencies:
   flutter_test:

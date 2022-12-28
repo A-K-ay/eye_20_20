@@ -11,9 +11,7 @@ class IosScreenTime extends ScreenTimeInterface {
   bool isLocked = true;
   @override
   Future init() async {
-    log("started listning");
-    await localNotificationService.intialize();
-    startTimer();
+    await commonInit();
   }
 
   @override
@@ -49,17 +47,6 @@ class IosScreenTime extends ScreenTimeInterface {
   @override
   // TODO: implement isRunning
   bool get isRunning => stopwatch.isRunning;
-
-  @override
-  void toggleTimer() {
-    if (isActive.value) {
-      isActive.value = false;
-      pauseStreams();
-    } else {
-      isActive.value = true;
-      resumeStreams();
-    }
-  }
 
   @override
   void pauseStreams() {

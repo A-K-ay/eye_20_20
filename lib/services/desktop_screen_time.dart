@@ -13,13 +13,12 @@ class DesktopScreenTime extends ScreenTimeInterface {
   @override
   Future init() async {
     log("started listning");
-    await localNotificationService.intialize();
+    await commonInit();
 
     flutterDesktopSleep.setWindowSleepHandler((String? s) async {
       log('Desktop Sleep State: $s');
       s != null ? onData(s) : null;
     });
-    startTimer();
   }
 
   @override
@@ -58,16 +57,7 @@ class DesktopScreenTime extends ScreenTimeInterface {
   // TODO: implement isRunning
   bool get isRunning => stopwatch.isRunning;
 
-  @override
-  void toggleTimer() {
-    if (isActive.value) {
-      isActive.value = false;
-      pauseStreams();
-    } else {
-      isActive.value = true;
-      resumeStreams();
-    }
-  }
+
 
   @override
   void pauseStreams() {

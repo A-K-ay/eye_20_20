@@ -9,19 +9,17 @@ import 'package:screen_state/screen_state.dart';
 
 class AndroidScreenTime extends ScreenTimeInterface {
   late Screen _screen;
-  late StreamSubscription ScreenStateSubcription;
+  late StreamSubscription screenStateSubcription;
   @override
   Future init() async {
-    await localNotificationService.intialize();
-
     log("started listning");
+    await commonInit();
     _screen = Screen();
     try {
-      ScreenStateSubcription = _screen.screenStateStream!.listen(onData);
+      screenStateSubcription = _screen.screenStateStream!.listen(onData);
     } on ScreenStateException catch (exception) {
       print(exception);
     }
-    startTimer();
   }
 
   @override
@@ -60,23 +58,14 @@ class AndroidScreenTime extends ScreenTimeInterface {
   // TODO: implement isRunning
   bool get isRunning => stopwatch.isRunning;
 
-  @override
-  void toggleTimer() {
-    if (isActive.value) {
-      isActive.value = false;
-      pauseStreams();
-    } else {
-      isActive.value = true;
-      resumeStreams();
-    }
-  }
+
 
   @override
   void pauseStreams() {
     // TODO: implement pauseStreams
     stopStopwatch();
     pollingSubscription.pause();
-    ScreenStateSubcription.pause();
+    screenStateSubcription.pause();
   }
 
   @override
@@ -84,6 +73,6 @@ class AndroidScreenTime extends ScreenTimeInterface {
     // TODO: implement resumeStreams
     startStopwatch();
     pollingSubscription.resume();
-    ScreenStateSubcription.resume();
+    screenStateSubcription.resume();
   }
 }

@@ -1,4 +1,5 @@
 import 'package:eye_20_20/services/screen_time_Interface.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:time_range_picker/time_range_picker.dart';
 
@@ -23,6 +24,26 @@ class _AddDailyDurationState extends State<AddDailyDuration> {
       ),
       childrenPadding: EdgeInsets.all(16),
       children: [
+        ListTile(
+          leading: Text(
+            "Schedule",
+            style: TextStyle(fontSize: 20),
+          ),
+          trailing: CupertinoSwitch(
+              value: widget.screenTimeInterface.isScheduleActive,
+              activeColor:
+                  Theme.of(context).buttonTheme.colorScheme!.background,
+              trackColor: Theme.of(context).disabledColor,
+              thumbColor: Theme.of(context).primaryColor,
+              onChanged: (val) async {
+                if (val) {
+                  await widget.screenTimeInterface.activateSchedule();
+                } else {
+                  await widget.screenTimeInterface.deactivateSchedule();
+                }
+                setState(() {});
+              }),
+        ),
         Text(
             widget.screenTimeInterface.scheduleRange == null
                 ? "Please Select a Time Range"
@@ -38,7 +59,7 @@ class _AddDailyDurationState extends State<AddDailyDuration> {
               TimeRange result = await showTimeRangePicker(
                 context: context,
               );
-              widget.screenTimeInterface.scheduleRange = result;
+              await widget.screenTimeInterface.setSchedule(result);
               setState(() {});
             },
             child: Text("Pick Time Range"))
