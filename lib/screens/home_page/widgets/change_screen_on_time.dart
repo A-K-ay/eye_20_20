@@ -11,7 +11,13 @@ class ChangeScreenOnTime extends StatefulWidget {
 }
 
 class _ChangeScreenOnTimeState extends State<ChangeScreenOnTime> {
-  double minutesDuration = 20;
+  late double minutesDuration;
+  @override
+  void initState() {
+    // TODO: implement initState
+    minutesDuration = widget.screenTimeInterface.screenOnTime.toDouble();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +35,7 @@ class _ChangeScreenOnTimeState extends State<ChangeScreenOnTime> {
             style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic)),
         Slider(
             value: minutesDuration,
-            min: 5,
+            min: 2,
             max: 200,
             onChanged: (val) {
               minutesDuration = val;
@@ -41,13 +47,17 @@ class _ChangeScreenOnTimeState extends State<ChangeScreenOnTime> {
         SizedBox(
           height: 8,
         ),
-        minutesDuration != 20
-            ? ElevatedButton(
+        Visibility(
+            visible: minutesDuration.toInt() !=
+                widget.screenTimeInterface.screenOnTime,
+            child: ElevatedButton(
                 onPressed: () {
                   // Change Screen time in shared prefrences.
+                  widget.screenTimeInterface
+                      .setScreenOnTime(minutesDuration.toInt());
+                  setState(() {});
                 },
-                child: Text("Save"))
-            : SizedBox.shrink(),
+                child: Text("Save")))
       ],
     );
   }

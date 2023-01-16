@@ -13,7 +13,7 @@ import 'local_notification.dart';
 abstract class ScreenTimeInterface {
   Stopwatch stopwatch = Stopwatch();
   late ValueNotifier<Duration> stopwatchListner = ValueNotifier(Duration.zero);
-  var screenOnTime = Duration(seconds: 120);
+  late int screenOnTime;
   Stream pollingStream = Stream.periodic(Duration(seconds: 1));
   late StreamSubscription pollingSubscription;
   late LocalNotificationService localNotificationService =
@@ -35,11 +35,14 @@ abstract class ScreenTimeInterface {
     }
   }
 
+  Duration get screenOnTimeAsDuration => Duration(minutes: screenOnTime);
+
   readSharedPrefrences() async {
     await sharedPrefrencesUtils.init();
     isActive.value = sharedPrefrencesUtils.isTimerActive;
     isScheduleActive = sharedPrefrencesUtils.isScheduleActivated;
     scheduleRange = sharedPrefrencesUtils.schedule;
+    screenOnTime = sharedPrefrencesUtils.screenOnTime;
   }
 
   Future initSchedule() async {
@@ -72,12 +75,17 @@ abstract class ScreenTimeInterface {
     await sharedPrefrencesUtils.setSchedule(timeRange);
   }
 
+  Future setScreenOnTime(int minutes) async {
+    screenOnTime = minutes;
+    await sharedPrefrencesUtils.setScreenOnTime(minutes);
+  }
+
   Future sendNotification() async {
     stopwatch.reset();
     await localNotificationService.showNotification(
-        title: "Please Close Your Eyes",
+        title: sharedPrefrencesUtils.notificationTitle,
         id: DateTime.now().second,
-        body: "Close Your Eyes!!");
+        body: sharedPrefrencesUtils.notificationDescription);
     log("Notification Sent");
   }
 

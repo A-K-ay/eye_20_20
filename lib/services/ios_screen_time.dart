@@ -21,7 +21,7 @@ class IosScreenTime extends ScreenTimeInterface {
     pollingSubscription = pollingStream.listen(((event) async {
       await lockScreenPoll();
       stopwatchListner.value = stopwatch.elapsed;
-      if (stopwatch.elapsed >= screenOnTime) {
+      if (stopwatch.elapsed >= screenOnTimeAsDuration) {
         await sendNotification();
       }
     }));

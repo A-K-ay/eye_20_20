@@ -26,7 +26,7 @@ class DesktopScreenTime extends ScreenTimeInterface {
     startStopwatch();
     pollingSubscription = pollingStream.listen(((event) async {
       stopwatchListner.value = stopwatch.elapsed;
-      if (stopwatch.elapsed >= screenOnTime) {
+      if (stopwatch.elapsed >= screenOnTimeAsDuration) {
         await sendNotification();
         log("notification sent");
         stopwatch.reset();
@@ -56,8 +56,6 @@ class DesktopScreenTime extends ScreenTimeInterface {
   @override
   // TODO: implement isRunning
   bool get isRunning => stopwatch.isRunning;
-
-
 
   @override
   void pauseStreams() {

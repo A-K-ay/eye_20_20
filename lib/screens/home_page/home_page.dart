@@ -79,7 +79,7 @@ class _HomePageState extends State<HomePage> {
                           progressColor: Theme.of(context).primaryColor,
                           percent:
                               _screenTime.stopwatchListner.value.inSeconds /
-                                  _screenTime.screenOnTime.inSeconds,
+                                  _screenTime.screenOnTimeAsDuration.inSeconds,
                           circularStrokeCap: CircularStrokeCap.round,
                           center: RichText(
                               textAlign: TextAlign.center,
