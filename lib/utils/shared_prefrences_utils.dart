@@ -65,7 +65,7 @@ class SharedPrefrencesUtils {
   }
 
   String get notificationDescription {
-    return _prefs.getString(prefsKeyScreenOnTime) ??
+    return _prefs.getString(prefsKeynotificationDescription) ??
         "Give Them a rest for a bit";
   }
 

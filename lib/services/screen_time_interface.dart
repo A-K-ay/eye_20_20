@@ -13,7 +13,7 @@ import 'local_notification.dart';
 abstract class ScreenTimeInterface {
   Stopwatch stopwatch = Stopwatch();
   late ValueNotifier<Duration> stopwatchListner = ValueNotifier(Duration.zero);
-  late int screenOnTime;
+  int screenOnTime = 20;
   Stream pollingStream = Stream.periodic(Duration(seconds: 1));
   late StreamSubscription pollingSubscription;
   late LocalNotificationService localNotificationService =

@@ -5,19 +5,17 @@ class LocalNotificationService {
 
   final _localNotificationService = FlutterLocalNotificationsPlugin();
 
-
   Future<void> intialize() async {
     const AndroidInitializationSettings androidInitializationSettings =
         AndroidInitializationSettings('@drawable/eye_icon');
 
     const DarwinInitializationSettings darwinInitializationSettings =
-       const DarwinInitializationSettings();
+        DarwinInitializationSettings();
 
     final InitializationSettings settings = InitializationSettings(
-      android: androidInitializationSettings,
-      iOS: darwinInitializationSettings,
-      macOS: darwinInitializationSettings
-    );
+        android: androidInitializationSettings,
+        iOS: darwinInitializationSettings,
+        macOS: darwinInitializationSettings);
 
     await _localNotificationService.initialize(
       settings,
@@ -32,13 +30,13 @@ class LocalNotificationService {
             priority: Priority.max,
             playSound: true);
 
-    const  iosNotificationDetails =
-        DarwinNotificationDetails();
+    const iosNotificationDetails =
+        DarwinNotificationDetails(presentAlert: true, presentSound: true);
 
     return const NotificationDetails(
-      android: androidNotificationDetails,
-      iOS: iosNotificationDetails,
-    );
+        android: androidNotificationDetails,
+        iOS: iosNotificationDetails,
+        macOS: iosNotificationDetails);
   }
 
   Future<void> showNotification({
@@ -49,6 +47,4 @@ class LocalNotificationService {
     final details = await _notificationDetails();
     await _localNotificationService.show(id, title, body, details);
   }
-
-
 }
