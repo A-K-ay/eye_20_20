@@ -50,11 +50,11 @@ abstract class ScreenTimeInterface {
       cron = Cron();
       cron.schedule(CommonUtils.cronStringFromTime(scheduleRange!.startTime),
           () async {
-        activate();
+        await activate();
       });
       cron.schedule(CommonUtils.cronStringFromTime(scheduleRange!.endTime),
           () async {
-        deactivate();
+        await deactivate();
       });
     }
   }
@@ -89,6 +89,8 @@ abstract class ScreenTimeInterface {
     log("Notification Sent");
   }
 
+  Future saveNotificationContent(String title, String description) async {}
+
   void stopStopwatch() {
     stopwatch.reset();
     stopwatch.stop();
@@ -101,25 +103,23 @@ abstract class ScreenTimeInterface {
   }
 
   bool get isStopwatchRunning => stopwatch.isRunning;
-  deactivate() {
+  Future deactivate() async {
     isActive.value = false;
-    stopStopwatch();
     pauseStreams();
+    await sharedPrefrencesUtils.setIsTimerActive(isActive.value);
   }
 
-  void activate() {
+  Future activate() async {
     isActive.value = true;
-    startTimer();
     resumeStreams();
+    await sharedPrefrencesUtils.setIsTimerActive(isActive.value);
   }
 
   Future toggleTimer() async {
     if (isActive.value) {
-      isActive.value = false;
-      pauseStreams();
+      await deactivate();
     } else {
-      isActive.value = true;
-      resumeStreams();
+      await activate();
     }
     await sharedPrefrencesUtils.setIsTimerActive(isActive.value);
   }
