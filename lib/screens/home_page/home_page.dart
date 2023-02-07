@@ -1,79 +1,66 @@
+import 'package:eye_20_20/bloc/cubit/screen_state_cubit.dart';
 import 'package:eye_20_20/screens/home_page/widgets/homePageDrawer.dart';
 import 'package:eye_20_20/services/screen_time_Interface.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 import '../../utils/common_utils.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class HomePage extends StatelessWidget {
+  final GlobalKey<ScaffoldState> _globalKey = GlobalKey();
 
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  late ScreenTimeInterface _screenTime;
-  GlobalKey<ScaffoldState> _globalKey = GlobalKey();
-
-  @override
-  void initState() {
-    _screenTime = CommonUtils.getScreenTime();
-    _screenTime.init();
-    super.initState();
-  }
-
-  void updateUI() async {
-    setState(() {});
-  }
+  HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _globalKey,
-      drawer: HomePageDrawer(
-        screenTime: _screenTime,
-      ),
-      body: SafeArea(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 16,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Take Care of Your Eyes",
-                        overflow: TextOverflow.fade,
-                        style: GoogleFonts.oswald(
-                            fontSize: 28, fontWeight: FontWeight.w500),
-                      ),
-                      ElevatedContainer(
-                          padding: 0,
-                          child: IconButton(
-                              icon: Icon(Icons.menu),
-                              onPressed: () {
-                                _globalKey.currentState?.openDrawer();
-                              })),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  AnimatedBuilder(
-                      animation: _screenTime.stopwatchListner,
-                      builder: ((context, child) {
-                        return Center(
+    return BlocProvider(
+      create: (context) =>
+          ScreenControllerCubit(CommonUtils.getScreenTime())..init(),
+      child: BlocBuilder<ScreenControllerCubit, ScreenController>(
+        builder: (context, state) {
+          return Scaffold(
+            key: _globalKey,
+            // drawer: HomePageDrawer(
+            //   screenTime: _screenTime,
+            // ),
+            body: SafeArea(
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 16,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Take Care of Your Eyes",
+                              overflow: TextOverflow.fade,
+                              style: GoogleFonts.oswald(
+                                  fontSize: 28, fontWeight: FontWeight.w500),
+                            ),
+                            ElevatedContainer(
+                                padding: 0,
+                                child: IconButton(
+                                    icon: Icon(Icons.menu),
+                                    onPressed: () {
+                                      _globalKey.currentState?.openDrawer();
+                                    })),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 16,
+                        ),
+                        Center(
                           child: CircularPercentIndicator(
                             // radius: _screenTime.screenOnTime.inSeconds.toDouble(),
                             radius: 160,
@@ -82,16 +69,15 @@ class _HomePageState extends State<HomePage> {
                             backgroundColor:
                                 Theme.of(context).bottomAppBarColor,
                             progressColor: Theme.of(context).primaryColor,
-                            percent: _screenTime
-                                    .stopwatchListner.value.inSeconds /
-                                _screenTime.screenOnTimeAsDuration.inSeconds,
+                            percent:
+                                state.stateModel?.screenTimePercentage ?? 0,
                             circularStrokeCap: CircularStrokeCap.round,
                             center: RichText(
                                 textAlign: TextAlign.center,
                                 text: TextSpan(children: [
                                   TextSpan(
                                       text:
-                                          "${_screenTime.stopwatchListner.value.inMinutes.remainder(60)}:${(_screenTime.stopwatchListner.value.inSeconds.remainder(60))}",
+                                          "${state.stateModel?.elapsedTime.inMinutes.remainder(60)}:${(state.stateModel?.elapsedTime.inSeconds.remainder(60))}",
                                       style: TextStyle(
                                           fontWeight: FontWeight.w500,
                                           color: Theme.of(context).primaryColor,
@@ -110,21 +96,18 @@ class _HomePageState extends State<HomePage> {
                                   )
                                 ])),
                           ),
-                        );
-                      })),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  AnimatedBuilder(
-                    animation: _screenTime.isActive,
-                    builder: ((context, child) => ElevatedContainer(
+                        ),
+                        SizedBox(
+                          height: 16,
+                        ),
+                        ElevatedContainer(
                           child: ListTile(
                             leading: Text(
                               "Timer",
                               style: TextStyle(fontSize: 20),
                             ),
                             trailing: CupertinoSwitch(
-                                value: _screenTime.isActive.value,
+                                value: state.stateModel?.isActive ?? false,
                                 activeColor: Theme.of(context)
                                     .buttonTheme
                                     .colorScheme!
@@ -132,22 +115,26 @@ class _HomePageState extends State<HomePage> {
                                 trackColor: Theme.of(context).disabledColor,
                                 thumbColor: Theme.of(context).primaryColor,
                                 onChanged: (val) async {
-                                  await _screenTime.toggleTimer();
+                                  await BlocProvider.of<ScreenControllerCubit>(
+                                          context)
+                                      .toggleTimer();
                                 }),
                           ),
-                        )),
+                        ),
+                        Divider(),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Text(
+                            "If you find yourself gazing at screens all day, your eye doctor may have mentioned this rule to you. Basically, every 20 minutes spent using a screen, you should try to look away at something that is 20 feet away from you for a total of 20 seconds."),
+                      ],
+                    ),
                   ),
-                  Divider(),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  Text(
-                      "If you find yourself gazing at screens all day, your eye doctor may have mentioned this rule to you. Basically, every 20 minutes spent using a screen, you should try to look away at something that is 20 feet away from you for a total of 20 seconds."),
-                ],
+                ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

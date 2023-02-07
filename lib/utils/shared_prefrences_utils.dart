@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:time_range_picker/time_range_picker.dart';
 
-class SharedPrefrencesUtils {
+class SharedPreferencesUtils {
   late SharedPreferences _prefs;
   String prefsKeyIsTimerActivated = "eye2020/isTimerActivated";
   String prefsKeyIsScheduleActivated = "eye2020/isTimerActivated";
@@ -60,7 +60,7 @@ class SharedPrefrencesUtils {
     return _prefs.getInt(prefsKeyScreenOnTime) ?? 20;
   }
 
-  Future setnotificationDescription(String data) {
+  Future setNotificationDescription(String data) {
     return _prefs.setString(prefsKeynotificationDescription, data);
   }
 
@@ -69,7 +69,7 @@ class SharedPrefrencesUtils {
         "Give Them a rest for a bit";
   }
 
-  Future setnotificationTitle(String data) {
+  Future setNotificationTitle(String data) {
     return _prefs.setString(prefsKeynotificationTitle, data);
   }
 

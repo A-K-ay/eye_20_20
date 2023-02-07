@@ -5,7 +5,7 @@ class LocalNotificationService {
 
   final _localNotificationService = FlutterLocalNotificationsPlugin();
 
-  Future<void> intialize() async {
+  Future<void> initialize() async {
     const AndroidInitializationSettings androidInitializationSettings =
         AndroidInitializationSettings('@drawable/eye_icon');
 

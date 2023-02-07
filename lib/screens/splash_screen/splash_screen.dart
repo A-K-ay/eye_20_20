@@ -23,12 +23,12 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void checkOnboardingFlag() async {
     final prefs = await SharedPreferences.getInstance();
-    bool onboardingShown = prefs.getBool("onboarding_Sceen") ?? false;
+    bool onboardingShown = prefs.getBool("onboarding_Screen") ?? false;
     if (onboardingShown) {
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (_) => const HomePage()));
+          context, MaterialPageRoute(builder: (_) => HomePage()));
     } else {
-      prefs.setBool("onboarding_Sceen", true);
+      prefs.setBool("onboarding_Screen", true);
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (_) => const Onboarding()));
     }
