@@ -20,6 +20,7 @@ class LocalNotificationService {
     await _localNotificationService.initialize(
       settings,
     );
+    await checkPermissionsAndRequest();
   }
 
   Future<NotificationDetails> _notificationDetails() async {
@@ -46,5 +47,19 @@ class LocalNotificationService {
   }) async {
     final details = await _notificationDetails();
     await _localNotificationService.show(id, title, body, details);
+  }
+
+  Future checkPermissionsAndRequest() async {
+    final enabled = await _localNotificationService
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.areNotificationsEnabled();
+
+    if (!(enabled ?? false)) {
+      _localNotificationService
+          .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>()
+          ?.requestNotificationsPermission();
+    }
   }
 }

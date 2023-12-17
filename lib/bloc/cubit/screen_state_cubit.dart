@@ -16,36 +16,38 @@ import 'package:time_range_picker/time_range_picker.dart';
 
 part 'screen_state_state.dart';
 
-class ScreenControllerCubit extends Cubit<ScreenController> {
+class ScreenControllerCubit extends Cubit<ScreenControllerState> {
   ScreenControllerCubit(this.screenStateInterface)
       : super(ScreenStatePaused(ScreenControllerStateModel(
             isActive: false,
             elapsedTime: Duration.zero,
             screenOnTime: 20,
-            isPaused: true)));
+            isPaused: true,
+            scheduleRange: null,
+            isScheduleActive: false,
+            screenOnTimesSliderValue: 20)));
 
   ScreenStateInterface screenStateInterface;
   Stopwatch stopwatch = Stopwatch();
-  int screenOnTime = 20;
   final Stream pollingStream = Stream.periodic(const Duration(seconds: 1));
-  late bool isScheduleActive = false;
-  bool isPaused = false;
-  TimeRange? scheduleRange;
+
   Cron cron = Cron();
 
   late StreamSubscription pollingSubscription;
-  late bool isActive = false;
   SharedPreferencesUtils sharedPreferencesUtils = SharedPreferencesUtils();
   late LocalNotificationService localNotificationService =
       LocalNotificationService();
 
-  Duration get screenOnTimeAsDuration => Duration(minutes: screenOnTime);
+  Duration get screenOnTimeAsDuration =>
+      Duration(minutes: state.stateModel.screenOnTime);
   bool get isStopwatchRunning => stopwatch.isRunning;
+
+  bool get isActive => state.stateModel.isActive;
   Future init() async {
     log("started listening");
     await readSharedPreferences();
     await localNotificationService.initialize();
-    if (isScheduleActive) {
+    if (state.stateModel.isScheduleActive) {
       await activateSchedule();
     }
     initTimer();
@@ -84,54 +86,64 @@ class ScreenControllerCubit extends Cubit<ScreenController> {
     }));
   }
 
-  void emitUpdatedState() {
-    emit(ScreenStateRunning(ScreenControllerStateModel(
-        isActive: isActive,
-        elapsedTime: stopwatch.elapsed,
-        screenOnTime: screenOnTime,
-        isPaused: isPaused)));
+  void emitUpdatedState([ScreenControllerStateModel? model]) {
+    if (model != null) {
+      emit(ScreenStateRunning(model));
+    } else {
+      emit(ScreenStateRunning(
+          state.stateModel.copyWith(elapsedTime: stopwatch.elapsed)));
+    }
   }
 
   readSharedPreferences() async {
     await sharedPreferencesUtils.init();
-    isActive = sharedPreferencesUtils.isTimerActive;
-    isScheduleActive = sharedPreferencesUtils.isScheduleActivated;
-    scheduleRange = sharedPreferencesUtils.schedule;
-    screenOnTime = sharedPreferencesUtils.screenOnTime;
+    emitUpdatedState(ScreenControllerStateModel(
+        elapsedTime: stopwatch.elapsed,
+        isActive: sharedPreferencesUtils.isTimerActive,
+        screenOnTime: sharedPreferencesUtils.screenOnTime,
+        isPaused: state.stateModel.isPaused,
+        scheduleRange: sharedPreferencesUtils.schedule,
+        isScheduleActive: sharedPreferencesUtils.isScheduleActivated,
+        screenOnTimesSliderValue:
+            sharedPreferencesUtils.screenOnTime.toDouble()));
   }
 
   Future initSchedule() async {
-    if (scheduleRange != null && isScheduleActive) {
+    if (state.stateModel.scheduleRange != null &&
+        state.stateModel.isScheduleActive) {
       cron = Cron();
-      cron.schedule(CommonUtils.cronStringFromTime(scheduleRange!.startTime),
-          () async {
+      cron.schedule(
+          CommonUtils.cronStringFromTime(
+              state.stateModel.scheduleRange!.startTime), () async {
         await activate();
       });
-      cron.schedule(CommonUtils.cronStringFromTime(scheduleRange!.endTime),
-          () async {
+      cron.schedule(
+          CommonUtils.cronStringFromTime(
+              state.stateModel.scheduleRange!.endTime), () async {
         await deactivate();
       });
     }
   }
 
   Future deactivateSchedule() async {
-    isScheduleActive = false;
+    emitUpdatedState(state.stateModel.copyWith(isScheduleActive: false));
     await sharedPreferencesUtils.setIsScheduleActivated(false);
     cron.close();
   }
 
   Future activateSchedule() async {
-    isScheduleActive = true;
+    emitUpdatedState(state.stateModel.copyWith(isScheduleActive: true));
     await sharedPreferencesUtils.setIsScheduleActivated(true);
     await initSchedule();
   }
 
   Future setSchedule(TimeRange timeRange) async {
+    emitUpdatedState(state.stateModel.copyWith(scheduleRange: timeRange));
     await sharedPreferencesUtils.setSchedule(timeRange);
   }
 
   Future setScreenOnTime(int minutes) async {
-    screenOnTime = minutes;
+    emitUpdatedState(state.stateModel.copyWith(screenOnTime: minutes));
     await sharedPreferencesUtils.setScreenOnTime(minutes);
   }
 
@@ -156,13 +168,13 @@ class ScreenControllerCubit extends Cubit<ScreenController> {
   }
 
   Future deactivate() async {
-    isActive = false;
+    emitUpdatedState(state.stateModel.copyWith(isActive: false));
     pause();
-    await sharedPreferencesUtils.setIsTimerActive(isActive);
+    await sharedPreferencesUtils.setIsTimerActive(false);
   }
 
   Future activate() async {
-    isActive = true;
+    emitUpdatedState(state.stateModel.copyWith(isActive: true));
     resume();
     await sharedPreferencesUtils.setIsTimerActive(isActive);
   }
@@ -179,14 +191,22 @@ class ScreenControllerCubit extends Cubit<ScreenController> {
   void pause() {
     stopStopwatch();
     pollingSubscription.pause();
-    isPaused = true;
-    emitUpdatedState();
+    emitUpdatedState(state.stateModel.copyWith(isPaused: true));
   }
 
   void resume() {
     startStopwatch();
     pollingSubscription.resume();
-    isPaused = false;
-    emitUpdatedState();
+    emitUpdatedState(state.stateModel.copyWith(isPaused: false));
+  }
+
+  void updateScreenOnTimerSliderValue(double val) {
+    emitUpdatedState(state.stateModel.copyWith(screenOnTimesSliderValue: val));
+  }
+
+  Future<void> saveNotificationContent(String title, String description) async {
+    await sharedPreferencesUtils.setNotificationTitle(title);
+    await sharedPreferencesUtils.setNotificationDescription(description);
+    sendNotification();
   }
 }

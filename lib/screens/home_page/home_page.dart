@@ -1,3 +1,6 @@
+import 'dart:math' as math;
+
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:eye_20_20/bloc/cubit/screen_state_cubit.dart';
 import 'package:eye_20_20/screens/home_page/widgets/homePageDrawer.dart';
 import 'package:eye_20_20/services/screen_time_Interface.dart';
@@ -19,119 +22,128 @@ class HomePage extends StatelessWidget {
     return BlocProvider(
       create: (context) =>
           ScreenControllerCubit(CommonUtils.getScreenTime())..init(),
-      child: BlocBuilder<ScreenControllerCubit, ScreenController>(
+      child: BlocBuilder<ScreenControllerCubit, ScreenControllerState>(
         builder: (context, state) {
           return Scaffold(
             key: _globalKey,
-            // drawer: HomePageDrawer(
-            //   screenTime: _screenTime,
-            // ),
+            drawer: HomePageDrawer(),
             body: SafeArea(
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 16,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Take Care of Your Eyes",
-                              overflow: TextOverflow.fade,
-                              style: GoogleFonts.oswald(
-                                  fontSize: 28, fontWeight: FontWeight.w500),
-                            ),
-                            ElevatedContainer(
-                                padding: 0,
-                                child: IconButton(
-                                    icon: Icon(Icons.menu),
-                                    onPressed: () {
-                                      _globalKey.currentState?.openDrawer();
-                                    })),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        Center(
-                          child: CircularPercentIndicator(
-                            // radius: _screenTime.screenOnTime.inSeconds.toDouble(),
-                            radius: 160,
-                            lineWidth: 30.0,
-                            rotateLinearGradient: true,
-                            backgroundColor:
-                                Theme.of(context).bottomAppBarColor,
-                            progressColor: Theme.of(context).primaryColor,
-                            percent:
-                                state.stateModel?.screenTimePercentage ?? 0,
-                            circularStrokeCap: CircularStrokeCap.round,
-                            center: RichText(
-                                textAlign: TextAlign.center,
-                                text: TextSpan(children: [
-                                  TextSpan(
-                                      text:
-                                          "${state.stateModel?.elapsedTime.inMinutes.remainder(60)}:${(state.stateModel?.elapsedTime.inSeconds.remainder(60))}",
+              child: LayoutBuilder(builder: (context, constraints) {
+                final height = constraints.maxHeight;
+                final width = constraints.maxWidth;
+
+                return SizedBox(
+                  height: height,
+                  width: width,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: height * 0.01,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                width: width * 0.7,
+                                child: AutoSizeText(
+                                  "Take Care of Your Eyes",
+                                  overflow: TextOverflow.fade,
+                                  style: GoogleFonts.oswald(
+                                      fontSize: 28,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                              ElevatedContainer(
+                                  padding: 0,
+                                  child: IconButton(
+                                      icon: Icon(Icons.menu),
+                                      onPressed: () {
+                                        _globalKey.currentState?.openDrawer();
+                                      })),
+                            ],
+                          ),
+                          SizedBox(
+                            height: height * 0.05,
+                          ),
+                          Center(
+                            child: CircularPercentIndicator(
+                              // radius: _screenTime.screenOnTime.inSeconds.toDouble(),
+                              radius: math.min((width * 0.4), (height * 0.2)),
+                              lineWidth: 30.0,
+                              rotateLinearGradient: true,
+                              backgroundColor:
+                                  Theme.of(context).bottomAppBarColor,
+                              progressColor: Theme.of(context).primaryColor,
+                              percent:
+                                  state.stateModel?.screenTimePercentage ?? 0,
+                              circularStrokeCap: CircularStrokeCap.round,
+                              center: RichText(
+                                  textAlign: TextAlign.center,
+                                  text: TextSpan(children: [
+                                    TextSpan(
+                                        text:
+                                            "${state.stateModel?.elapsedTime.inMinutes.remainder(60)}:${(state.stateModel?.elapsedTime.inSeconds.remainder(60))}",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            fontSize: 24)),
+                                    TextSpan(
+                                      text: "\nMinutes ",
                                       style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          color: Theme.of(context).primaryColor,
-                                          fontSize: 24)),
-                                  TextSpan(
-                                    text: "\nMinutes ",
-                                    style: TextStyle(
-                                      color: Theme.of(context).primaryColor,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
                                     ),
-                                  ),
-                                  TextSpan(
-                                    text: ": Seconds",
-                                    style: TextStyle(
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                  )
-                                ])),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        ElevatedContainer(
-                          child: ListTile(
-                            leading: Text(
-                              "Timer",
-                              style: TextStyle(fontSize: 20),
+                                    TextSpan(
+                                      text: ": Seconds",
+                                      style: TextStyle(
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                    )
+                                  ])),
                             ),
-                            trailing: CupertinoSwitch(
-                                value: state.stateModel?.isActive ?? false,
-                                activeColor: Theme.of(context)
-                                    .buttonTheme
-                                    .colorScheme!
-                                    .background,
-                                trackColor: Theme.of(context).disabledColor,
-                                thumbColor: Theme.of(context).primaryColor,
-                                onChanged: (val) async {
-                                  await BlocProvider.of<ScreenControllerCubit>(
-                                          context)
-                                      .toggleTimer();
-                                }),
                           ),
-                        ),
-                        Divider(),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        Text(
-                            "If you find yourself gazing at screens all day, your eye doctor may have mentioned this rule to you. Basically, every 20 minutes spent using a screen, you should try to look away at something that is 20 feet away from you for a total of 20 seconds."),
-                      ],
+                          SizedBox(
+                            height: height * 0.05,
+                          ),
+                          ElevatedContainer(
+                            child: ListTile(
+                              leading: AutoSizeText(
+                                "Timer",
+                                style: TextStyle(fontSize: 20),
+                              ),
+                              trailing: CupertinoSwitch(
+                                  value: state.stateModel?.isActive ?? false,
+                                  activeColor: Theme.of(context)
+                                      .buttonTheme
+                                      .colorScheme!
+                                      .background,
+                                  trackColor: Theme.of(context).disabledColor,
+                                  thumbColor: Theme.of(context).primaryColor,
+                                  onChanged: (val) async {
+                                    await BlocProvider.of<
+                                            ScreenControllerCubit>(context)
+                                        .toggleTimer();
+                                  }),
+                            ),
+                          ),
+                          Divider(),
+                          SizedBox(
+                            height: height * 0.01,
+                          ),
+                          AutoSizeText(
+                            "If you find yourself gazing at screens all day, your eye doctor may have mentioned this rule to you. Basically, every 20 minutes spent using a screen, you should try to look away at something that is 20 feet away from you for a total of 20 seconds.",
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ),
+                );
+              }),
             ),
           );
         },

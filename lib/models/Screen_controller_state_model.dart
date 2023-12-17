@@ -7,39 +7,46 @@ class ScreenControllerStateModel {
   final bool isActive;
   final Duration elapsedTime;
   final int screenOnTime;
-  bool isPaused = false;
-  TimeRange? scheduleRange;
+  final bool isPaused;
+  final TimeRange? scheduleRange;
+  final bool isScheduleActive;
+  final double screenOnTimesSliderValue;
   ScreenControllerStateModel({
     required this.isActive,
     required this.elapsedTime,
     required this.screenOnTime,
     required this.isPaused,
-    this.scheduleRange,
+    required this.scheduleRange,
+    required this.isScheduleActive,
+    required this.screenOnTimesSliderValue,
   });
 
-  ScreenControllerStateModel copyWith({
-    bool? isActive,
-    Duration? elapsedTime,
-    int? screenOnTime,
-    bool? isPaused,
-    TimeRange? scheduleRange,
-  }) {
+  ScreenControllerStateModel copyWith(
+      {bool? isActive,
+      Duration? elapsedTime,
+      int? screenOnTime,
+      bool? isPaused,
+      TimeRange? scheduleRange,
+      bool? isScheduleActive,
+      double? screenOnTimesSliderValue}) {
     return ScreenControllerStateModel(
       isActive: isActive ?? this.isActive,
       elapsedTime: elapsedTime ?? this.elapsedTime,
       screenOnTime: screenOnTime ?? this.screenOnTime,
       isPaused: isPaused ?? this.isPaused,
       scheduleRange: scheduleRange ?? this.scheduleRange,
+      isScheduleActive: isScheduleActive ?? this.isScheduleActive,
+      screenOnTimesSliderValue:
+          screenOnTimesSliderValue ?? this.screenOnTimesSliderValue,
     );
-  }
-
-  @override
-  String toString() {
-    return 'ScreenControllerStateModel(isActive: $isActive, elapsedTime: $elapsedTime, screenOnTime: $screenOnTime, isPaused: $isPaused, scheduleRange: $scheduleRange)';
   }
 
   double get screenTimePercentage =>
       elapsedTime.inSeconds / Duration(minutes: screenOnTime).inSeconds;
+
+  bool get showScreenTimeSliderSaveButton =>
+      screenOnTimesSliderValue.toInt() != screenOnTime;
+
   @override
   bool operator ==(covariant ScreenControllerStateModel other) {
     if (identical(this, other)) return true;
@@ -48,7 +55,8 @@ class ScreenControllerStateModel {
         other.elapsedTime == elapsedTime &&
         other.screenOnTime == screenOnTime &&
         other.isPaused == isPaused &&
-        other.scheduleRange == scheduleRange;
+        other.scheduleRange == scheduleRange &&
+        other.isScheduleActive == isScheduleActive;
   }
 
   @override
@@ -57,6 +65,8 @@ class ScreenControllerStateModel {
         elapsedTime.hashCode ^
         screenOnTime.hashCode ^
         isPaused.hashCode ^
-        scheduleRange.hashCode;
+        scheduleRange.hashCode ^
+        isScheduleActive.hashCode ^
+        screenOnTimesSliderValue.hashCode;
   }
 }

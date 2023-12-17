@@ -2,7 +2,7 @@ import 'package:eye_20_20/constants/screen_state_enum.dart';
 import 'package:eye_20_20/services/screen_state_interface.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/src/foundation/basic_types.dart';
-import 'package:is_lock_screen/is_lock_screen.dart';
+import 'package:is_lock_screen2/is_lock_screen2.dart';
 
 class IosScreenState extends ScreenStateInterface {
   bool isLocked = true;
