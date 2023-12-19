@@ -50,6 +50,7 @@ class ScreenControllerCubit extends Cubit<ScreenControllerState> {
     if (state.stateModel.isScheduleActive) {
       await activateSchedule();
     }
+    setScreenStateListener();
     initTimer();
     if (!isActive) {
       deactivate();
@@ -140,6 +141,7 @@ class ScreenControllerCubit extends Cubit<ScreenControllerState> {
   Future setSchedule(TimeRange timeRange) async {
     emitUpdatedState(state.stateModel.copyWith(scheduleRange: timeRange));
     await sharedPreferencesUtils.setSchedule(timeRange);
+    initSchedule();
   }
 
   Future setScreenOnTime(int minutes) async {

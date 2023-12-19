@@ -22,6 +22,12 @@ class CommonUtils {
     }
   }
 
+  static isWindows() {
+    if (Platform.isWindows) {
+      return true;
+    }
+  }
+
   static Schedule cronStringFromTime(TimeOfDay time) {
     return Schedule.parse('0 m h * * *'
         .replaceFirst("h", time.hour.toString())

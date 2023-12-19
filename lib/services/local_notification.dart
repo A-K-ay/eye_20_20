@@ -1,9 +1,13 @@
+import 'package:eye_20_20/utils/common_utils.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:windows_notification/notification_message.dart';
+import 'package:windows_notification/windows_notification.dart';
 
 class LocalNotificationService {
   LocalNotificationService();
 
   final _localNotificationService = FlutterLocalNotificationsPlugin();
+  final _winNotifyPlugin = WindowsNotification(applicationId: "Eye 20 20");
 
   Future<void> initialize() async {
     const AndroidInitializationSettings androidInitializationSettings =
@@ -45,8 +49,17 @@ class LocalNotificationService {
     required String title,
     required String body,
   }) async {
-    final details = await _notificationDetails();
-    await _localNotificationService.show(id, title, body, details);
+    if (CommonUtils.isWindows()) {
+      NotificationMessage message = NotificationMessage.fromPluginTemplate(
+        id.toString(),
+        title,
+        body,
+      );
+      _winNotifyPlugin.showNotificationPluginTemplate(message);
+    } else {
+      final details = await _notificationDetails();
+      await _localNotificationService.show(id, title, body, details);
+    }
   }
 
   Future checkPermissionsAndRequest() async {
