@@ -1,4 +1,4 @@
-package com.example.eye_20_20
+package com.example.eyecareplus
 
 import io.flutter.embedding.android.FlutterActivity
 

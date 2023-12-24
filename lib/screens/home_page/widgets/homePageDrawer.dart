@@ -1,6 +1,5 @@
-import 'package:eye_20_20/screens/home_page/widgets/add_daily_duration.dart';
-import 'package:eye_20_20/screens/home_page/widgets/notifiaction_content_editor.dart';
-import 'package:eye_20_20/services/screen_time_Interface.dart';
+import 'package:eyecareplus/screens/home_page/widgets/add_daily_duration.dart';
+import 'package:eyecareplus/screens/home_page/widgets/notifiaction_content_editor.dart';
 import 'package:flutter/material.dart';
 
 import 'change_screen_on_time.dart';

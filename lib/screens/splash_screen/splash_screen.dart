@@ -1,5 +1,5 @@
-import 'package:eye_20_20/screens/home_page/home_page.dart';
-import 'package:eye_20_20/screens/onboarding_screen/onboarding_screen.dart';
+import 'package:eyecareplus/screens/home_page/home_page.dart';
+import 'package:eyecareplus/screens/onboarding_screen/onboarding_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';

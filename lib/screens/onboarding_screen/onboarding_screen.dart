@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:eye_20_20/models/onboarding_model.dart';
+import 'package:eyecareplus/models/onboarding_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';

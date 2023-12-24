@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "eye_20_20" "\0"
+            VALUE "FileDescription", "eyecareplus" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "eye_20_20" "\0"
+            VALUE "InternalName", "eyecareplus" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2022 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "eye_20_20.exe" "\0"
-            VALUE "ProductName", "eye_20_20" "\0"
+            VALUE "OriginalFilename", "eyecareplus.exe" "\0"
+            VALUE "ProductName", "eyecareplus" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

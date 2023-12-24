@@ -1,10 +1,8 @@
-import 'package:eye_20_20/bloc/cubit/screen_state_cubit.dart';
+import 'package:eyecareplus/bloc/cubit/screen_state_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../services/screen_time_Interface.dart';
 
 class NotificationContentEditor extends StatefulWidget {
   const NotificationContentEditor({

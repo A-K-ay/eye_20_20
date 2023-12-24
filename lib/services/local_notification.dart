@@ -1,4 +1,4 @@
-import 'package:eye_20_20/utils/common_utils.dart';
+import 'package:eyecareplus/utils/common_utils.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:windows_notification/notification_message.dart';
 import 'package:windows_notification/windows_notification.dart';

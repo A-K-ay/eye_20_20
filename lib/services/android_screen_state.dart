@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:eye_20_20/constants/screen_state_enum.dart';
-import 'package:eye_20_20/services/screen_state_interface.dart';
+import 'package:eyecareplus/constants/screen_state_enum.dart';
+import 'package:eyecareplus/services/screen_state_interface.dart';
 import 'package:flutter/src/foundation/basic_types.dart';
 import 'package:flutter/src/foundation/change_notifier.dart';
 import 'package:screen_state/screen_state.dart';
