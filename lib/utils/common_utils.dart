@@ -22,6 +22,7 @@ class CommonUtils {
     if (Platform.isWindows) {
       return true;
     }
+    return false;
   }
 
   static Schedule cronStringFromTime(TimeOfDay time) {

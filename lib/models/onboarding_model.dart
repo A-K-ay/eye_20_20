@@ -7,10 +7,14 @@ class OnboardingModel {
 }
 
 List<OnboardingModel> onboardingModelList = [
-  OnboardingModel("assets/images/co-working.svg", "Take Care Of Your Eyes",
-      "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here"),
-  OnboardingModel("assets/images/screen_time.svg", "Take Care Of Your Eyes",
-      "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here"),
-  OnboardingModel("assets/images/starry_window.svg", "Take Care Of Your Eyes",
-      "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here"),
+  OnboardingModel(
+      "assets/images/co-working.svg",
+      "Eye Care Plus: A smart app for healthy eyesight",
+      "Protect your eyes from screen fatigue and improve your vision with Eye Care Plus"),
+  OnboardingModel("assets/images/screen_time.svg", "How Eye Care Plus works",
+      "Follow the 20-20-20 rule, customize your breaks, and get personalized reminders from Eye Care Plus"),
+  OnboardingModel(
+      "assets/images/starry_window.svg",
+      "Benefits of using Eye Care Plus",
+      "Reduce eye strain, prevent eye diseases, and enhance your productivity and well-being with Eye Care Plus."),
 ];

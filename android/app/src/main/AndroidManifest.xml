@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.eyecareplus">
    <application
-        android:label="eyecareplus"
+        android:label="Eye Care Plus"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity

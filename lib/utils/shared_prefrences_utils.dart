@@ -66,7 +66,7 @@ class SharedPreferencesUtils {
 
   String get notificationDescription {
     return _prefs.getString(prefsKeynotificationDescription) ??
-        "Give Them a rest for a bit";
+        "Take a 20-second break and look at something that is 20 meters away from you";
   }
 
   Future setNotificationTitle(String data) {
@@ -74,7 +74,6 @@ class SharedPreferencesUtils {
   }
 
   String get notificationTitle {
-    return _prefs.getString(prefsKeynotificationTitle) ??
-        "Please Close Your Eyes!";
+    return "Relax your eyes";
   }
 }
