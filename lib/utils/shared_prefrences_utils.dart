@@ -74,6 +74,6 @@ class SharedPreferencesUtils {
   }
 
   String get notificationTitle {
-    return "Relax your eyes";
+    return _prefs.getString(prefsKeynotificationTitle) ?? "Relax your eyes";
   }
 }
