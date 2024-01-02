@@ -69,7 +69,6 @@ class ScreenControllerCubit extends Cubit<ScreenControllerState> {
             break;
         }
       }
-      // TODO: pause or resume based on the incomming screen state.
     });
   }
 
@@ -158,8 +157,8 @@ class ScreenControllerCubit extends Cubit<ScreenControllerState> {
   }
 
   void stopStopwatch() {
-    stopwatch.reset();
     stopwatch.stop();
+    stopwatch.reset();
     emitUpdatedState();
   }
 
